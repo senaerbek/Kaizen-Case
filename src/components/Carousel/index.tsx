@@ -7,7 +7,6 @@ interface Props {
 }
 
 const {width} = Dimensions.get('window');
-const SPACING = 10;
 const ITEM_SIZE = Platform.OS === 'ios' ? width * 0.82 : width * 0.74;
 const EMPTY_ITEM_SIZE = (width - ITEM_SIZE) / 2;
 
@@ -48,29 +47,10 @@ export function Carousel(props: Props) {
 
           return (
             <>
-              <View style={{width: ITEM_SIZE, position: 'relative'}}>
+              <View style={[{width: ITEM_SIZE}, Styles.imageContainer]}>
                 <Animated.View
-                  style={{
-                    marginHorizontal: SPACING,
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    transform: [{translateY}],
-                  }}>
-                  <View
-                    style={{
-                      position: 'absolute',
-                      marginHorizontal: SPACING,
-                      justifyContent: 'flex-start',
-                      backgroundColor: 'blue',
-                      borderBottomEndRadius: 24,
-                      borderBottomStartRadius: 24,
-                      height: 50,
-                      bottom: -4,
-                      left: -10,
-                      width: ITEM_SIZE - 20,
-                      transform: [{rotate: '3deg'}],
-                    }}
-                  />
+                  style={[Styles.imageView, {transform: [{translateY}]}]}>
+                  <View style={Styles.imageBottom} />
                   <Image source={{uri: item}} style={Styles.image} />
                 </Animated.View>
               </View>
