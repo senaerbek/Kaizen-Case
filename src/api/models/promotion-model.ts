@@ -1,6 +1,6 @@
 export interface PromotionModel {
   BrandIconColor: string;
-  BandIconUrl: string;
+  BrandIconUrl: string;
   BrandPromotionCardParticipationText: string;
   Id: number;
   ImageUrl: string;

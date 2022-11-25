@@ -5,6 +5,7 @@ import {TagModel} from '../api/models/tag-model';
 import {TagList} from '../components/TagList';
 import {PromotionModel} from '../api/models/promotion-model';
 import {Carousel} from '../components/Carousel';
+import {Header} from '../components/Header';
 
 export function MainScreen() {
   const [tagList, setTagList] = useState<TagModel[]>([]);
@@ -32,8 +33,11 @@ export function MainScreen() {
 
   return (
     <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <TagList tagList={tagList} selectTag={selectTag} />
-      <Carousel imageList={promotion.map(i => i.ImageUrl)} />
+      <Header />
+      <View style={{marginLeft: 15, marginTop: 20}}>
+        <TagList tagList={tagList} selectTag={selectTag} />
+      </View>
+      <Carousel imageList={promotion} />
     </View>
   );
 }
