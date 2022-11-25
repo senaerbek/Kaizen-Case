@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'https://apiv5test.akilliticaretim.com/api/v5/',
+  baseURL: 'https://api.extrazone.com/',
   headers: {
     'Content-Type': 'application/json',
   },
