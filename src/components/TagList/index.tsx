@@ -5,10 +5,11 @@ import {Tag} from '../Tag';
 
 interface TagListProps {
   tagList: TagModel[];
+  selectTag: (tag: TagModel) => void;
 }
 
 export function TagList(props: TagListProps) {
-  const {tagList} = props;
+  const {tagList, selectTag} = props;
 
   return (
     <View>
@@ -17,7 +18,7 @@ export function TagList(props: TagListProps) {
         showsHorizontalScrollIndicator={false}
         data={tagList}
         renderItem={({item}) => (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => selectTag(item)}>
             <Tag tag={item} />
           </TouchableOpacity>
         )}
