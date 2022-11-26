@@ -6,6 +6,7 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {Styles} from './style';
 import {MainScreen} from '../screens/MainScreen';
 import {DetailScreen} from '../screens/DetailScreen';
+import {ParamListBase, TabNavigationState} from '@react-navigation/native';
 
 export type RootStackParamList = {
   HomeScreen: undefined;
@@ -15,7 +16,7 @@ export type RootStackParamList = {
 const MainStack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
-function MyTabBar({state}) {
+function MyTabBar({state}: {state: TabNavigationState<ParamListBase>}) {
   return (
     <View style={Styles.tabBarContainer}>
       {state.routes.map(route => {

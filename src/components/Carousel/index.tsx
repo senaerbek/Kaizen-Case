@@ -1,16 +1,9 @@
 import React, {useCallback} from 'react';
-import {
-  Animated,
-  Dimensions,
-  Image,
-  Platform,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Animated, Dimensions, Platform, View} from 'react-native';
 import {Styles} from './style';
 import {PromotionModel} from '../../api/models/promotion-model';
-import {Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {CarouselCard} from '../CarouselCard';
 
 interface Props {
   imageList: PromotionModel[];
@@ -27,6 +20,7 @@ export function Carousel(props: Props) {
 
   const navigateToDetailScreen = useCallback(
     (promotionId: number) => {
+      // @ts-ignore
       navigation.navigate('DetailScreen', {promotionId});
     },
     [navigation],
@@ -40,7 +34,6 @@ export function Carousel(props: Props) {
         horizontal
         bounces={false}
         decelerationRate={Platform.OS === 'ios' ? 0 : 0.98}
-        // renderToHardwareTextureAndroid
         snapToInterval={ITEM_SIZE}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {x: scrollX}}}],
@@ -64,58 +57,13 @@ export function Carousel(props: Props) {
           });
 
           return (
-            <View>
-              <View style={[{width: ITEM_SIZE}, Styles.imageContainer]}>
-                <TouchableOpacity
-                  onPress={() => navigateToDetailScreen(item.Id)}>
-                  <Animated.View
-                    style={[Styles.imageView, {transform: [{translateY}]}]}>
-                    <View
-                      style={[
-                        Styles.imageBottom,
-                        {backgroundColor: item.PromotionCardColor},
-                      ]}
-                    />
-                    <View
-                      style={[
-                        Styles.bottomContainer,
-                        index !== 1 ? {height: 320} : {height: 370},
-                      ]}>
-                      <View>
-                        <View style={Styles.remainingTextContainer}>
-                          <Text style={Styles.remainingText}>
-                            {item.RemainingText}
-                          </Text>
-                        </View>
-                        <Image
-                          resizeMode={'contain'}
-                          source={{uri: item.ImageUrl}}
-                          style={Styles.image}
-                        />
-                      </View>
-
-                      <View style={Styles.titleContainer}>
-                        <Text style={Styles.title}>{item?.Title}</Text>
-                        <Text
-                          style={[
-                            Styles.bottomText,
-                            {color: item.PromotionCardColor},
-                          ]}>
-                          Daha Daha
-                        </Text>
-                      </View>
-                      <View style={Styles.brandIconContainer}>
-                        <Image
-                          resizeMode={'contain'}
-                          source={{uri: item.BrandIconUrl}}
-                          style={Styles.brandIcon}
-                        />
-                      </View>
-                    </View>
-                  </Animated.View>
-                </TouchableOpacity>
-              </View>
-            </View>
+            <CarouselCard
+              item={item}
+              translateY={translateY}
+              onPress={navigateToDetailScreen}
+              ITEM_SIZE={ITEM_SIZE}
+              index={index}
+            />
           );
         }}
       />
