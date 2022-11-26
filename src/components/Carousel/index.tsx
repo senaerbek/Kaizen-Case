@@ -1,5 +1,12 @@
-import React, {useCallback} from 'react';
-import {Animated, Dimensions, Platform, View} from 'react-native';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
+import {
+  Animated,
+  Dimensions,
+  Platform,
+  Text,
+  View,
+  ViewToken,
+} from 'react-native';
 import {Styles} from './style';
 import {PromotionModel} from '../../api/models/promotion-model';
 import {useNavigation} from '@react-navigation/native';
@@ -11,12 +18,25 @@ interface Props {
 
 const {width} = Dimensions.get('window');
 const ITEM_SIZE = Platform.OS === 'ios' ? width * 0.82 : width * 0.74;
-const EMPTY_ITEM_SIZE = (width - ITEM_SIZE) / 2;
+const EMPTY_ITEM_SIZE = (width - ITEM_SIZE) / 3;
 
 export function Carousel(props: Props) {
   const {imageList} = props;
   const navigation = useNavigation();
   const scrollX = React.useRef(new Animated.Value(1)).current;
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+    waitForInteraction: true,
+    minimumViewTime: 1,
+  });
+
+  const onViewableItemsChanged = React.useRef(({changed}) => {
+    if (changed && changed.length > 0) {
+      setActiveIndex(changed[0].index);
+    }
+  });
 
   const navigateToDetailScreen = useCallback(
     (promotionId: number) => {
@@ -35,35 +55,28 @@ export function Carousel(props: Props) {
         bounces={false}
         decelerationRate={Platform.OS === 'ios' ? 0 : 0.98}
         snapToInterval={ITEM_SIZE}
+        onViewableItemsChanged={onViewableItemsChanged?.current}
+        viewabilityConfig={viewabilityConfig?.current}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {x: scrollX}}}],
           {useNativeDriver: false},
         )}
         scrollEventThrottle={16}
         renderItem={({item, index}) => {
-          if (index === 0) {
-            return <View style={{width: EMPTY_ITEM_SIZE}} />;
-          }
-
-          const inputRange = [
-            (index - 2) * ITEM_SIZE,
-            (index - 1) * ITEM_SIZE,
-            index * ITEM_SIZE,
-          ];
-
-          const translateY = scrollX.interpolate({
-            inputRange,
-            outputRange: [70, 70, 70],
-          });
-
           return (
-            <CarouselCard
-              item={item}
-              translateY={translateY}
-              onPress={navigateToDetailScreen}
-              ITEM_SIZE={ITEM_SIZE}
-              index={index}
-            />
+            <>
+              {index === 0 ? <View style={{width: EMPTY_ITEM_SIZE}} /> : null}
+              <CarouselCard
+                item={item}
+                onPress={navigateToDetailScreen}
+                ITEM_SIZE={ITEM_SIZE}
+                index={index}
+                activeIndex={activeIndex}
+              />
+              {index === imageList.length - 1 ? (
+                <View style={{width: EMPTY_ITEM_SIZE}} />
+              ) : null}
+            </>
           );
         }}
       />
