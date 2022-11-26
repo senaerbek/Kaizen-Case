@@ -14,6 +14,7 @@ export function MainScreen() {
   const selectTag = useCallback((tag: TagModel) => {
     ExtrazoneService.getPromotions(tag.Id)
       .then(response => {
+        console.log(response);
         setPromotion(response);
       })
       .catch(error => {

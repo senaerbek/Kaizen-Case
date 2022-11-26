@@ -1,7 +1,15 @@
 import React from 'react';
-import {Animated, Dimensions, Image, Platform, Text, View} from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  Image,
+  Platform,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Styles} from './style';
 import {PromotionModel} from '../../api/models/promotion-model';
+import {Text} from 'react-native';
 
 interface Props {
   imageList: PromotionModel[];
@@ -43,43 +51,60 @@ export function Carousel(props: Props) {
 
           const translateY = scrollX.interpolate({
             inputRange,
-            outputRange: [70, 50, 70],
+            outputRange: [70, 70, 70],
           });
 
           return (
             <View>
               <View style={[{width: ITEM_SIZE}, Styles.imageContainer]}>
-                <Animated.View
-                  style={[Styles.imageView, {transform: [{translateY}]}]}>
-                  <View
-                    style={[
-                      Styles.imageBottom,
-                      {backgroundColor: item.PromotionCardColor},
-                    ]}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      height: 320,
-                      borderRadius: 20,
-                      position: 'relative',
-                      borderWidth: 0.3,
-                      borderColor: '#E5E5E5',
-                    }}>
-                    <Image
-                      resizeMode={'contain'}
-                      source={{uri: item.ImageUrl}}
-                      style={Styles.image}
+                <TouchableOpacity>
+                  <Animated.View
+                    style={[Styles.imageView, {transform: [{translateY}]}]}>
+                    <View
+                      style={[
+                        Styles.imageBottom,
+                        {backgroundColor: item.PromotionCardColor},
+                      ]}
                     />
-                    <View style={Styles.brandIconContainer}>
-                      <Image
-                        resizeMode={'contain'}
-                        source={{uri: item.BrandIconUrl}}
-                        style={Styles.brandIcon}
-                      />
+
+                    <View
+                      style={[
+                        Styles.bottomContainer,
+                        index !== 1 ? {height: 320} : {height: 370},
+                      ]}>
+                      <View>
+                        <View style={Styles.remainingTextContainer}>
+                          <Text style={Styles.remainingText}>
+                            {item.RemainingText}
+                          </Text>
+                        </View>
+                        <Image
+                          resizeMode={'contain'}
+                          source={{uri: item.ImageUrl}}
+                          style={Styles.image}
+                        />
+                      </View>
+
+                      <View style={Styles.titleContainer}>
+                        <Text style={Styles.title}>{item?.Title}</Text>
+                        <Text
+                          style={[
+                            Styles.bottomText,
+                            {color: item.PromotionCardColor},
+                          ]}>
+                          Daha Daha
+                        </Text>
+                      </View>
+                      <View style={Styles.brandIconContainer}>
+                        <Image
+                          resizeMode={'contain'}
+                          source={{uri: item.BrandIconUrl}}
+                          style={Styles.brandIcon}
+                        />
+                      </View>
                     </View>
-                  </View>
-                </Animated.View>
+                  </Animated.View>
+                </TouchableOpacity>
               </View>
             </View>
           );
