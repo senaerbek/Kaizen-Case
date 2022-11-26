@@ -5,9 +5,11 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 
 import {Styles} from './style';
 import {MainScreen} from '../screens/MainScreen';
+import {DetailScreen} from '../screens/DetailScreen';
 
 export type RootStackParamList = {
   HomeScreen: undefined;
+  DetailScreen: {promotionId: number};
 };
 
 const MainStack = createStackNavigator<RootStackParamList>();
@@ -64,6 +66,7 @@ export const MainNavigator = memo(function ApplicationNavigator() {
   return (
     <MainStack.Navigator screenOptions={{headerShown: false}}>
       <MainStack.Screen name="HomeScreen" component={TabComponent} />
+      <MainStack.Screen name="DetailScreen" component={DetailScreen} />
     </MainStack.Navigator>
   );
 });

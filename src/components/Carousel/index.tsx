@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   Animated,
   Dimensions,
@@ -10,6 +10,7 @@ import {
 import {Styles} from './style';
 import {PromotionModel} from '../../api/models/promotion-model';
 import {Text} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   imageList: PromotionModel[];
@@ -21,7 +22,15 @@ const EMPTY_ITEM_SIZE = (width - ITEM_SIZE) / 2;
 
 export function Carousel(props: Props) {
   const {imageList} = props;
+  const navigation = useNavigation();
   const scrollX = React.useRef(new Animated.Value(1)).current;
+
+  const navigateToDetailScreen = useCallback(
+    (promotionId: number) => {
+      navigation.navigate('DetailScreen', {promotionId});
+    },
+    [navigation],
+  );
 
   return (
     <View style={Styles.container}>
@@ -57,7 +66,8 @@ export function Carousel(props: Props) {
           return (
             <View>
               <View style={[{width: ITEM_SIZE}, Styles.imageContainer]}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigateToDetailScreen(item.Id)}>
                   <Animated.View
                     style={[Styles.imageView, {transform: [{translateY}]}]}>
                     <View
@@ -66,7 +76,6 @@ export function Carousel(props: Props) {
                         {backgroundColor: item.PromotionCardColor},
                       ]}
                     />
-
                     <View
                       style={[
                         Styles.bottomContainer,
