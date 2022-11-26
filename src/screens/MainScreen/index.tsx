@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View} from 'react-native';
-import {ExtrazoneService} from '../api/services/extrazone-service';
-import {TagModel} from '../api/models/tag-model';
-import {TagList} from '../components/TagList';
-import {PromotionModel} from '../api/models/promotion-model';
-import {Carousel} from '../components/Carousel';
-import {Header} from '../components/Header';
+import {TagModel} from '../../api/models/tag-model';
+import {PromotionModel} from '../../api/models/promotion-model';
+import {ExtrazoneService} from '../../api/services/extrazone-service';
+import {Carousel} from '../../components/Carousel';
+import {TagList} from '../../components/TagList';
+import {Header} from '../../components/Header';
 
 export function MainScreen() {
   const [tagList, setTagList] = useState<TagModel[]>([]);

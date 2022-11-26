@@ -2,8 +2,9 @@ import React, {memo} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import {MainScreen} from '../screens';
+
 import {Styles} from './style';
+import {MainScreen} from '../screens/MainScreen';
 
 export type RootStackParamList = {
   HomeScreen: undefined;

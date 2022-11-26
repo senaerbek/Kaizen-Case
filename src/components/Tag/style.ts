@@ -4,7 +4,6 @@ export const styles = StyleSheet.create({
   tagContainer: {
     height: 36,
     minWidth: 105,
-    borderColor: '#ECEEEF',
     borderWidth: 1.5,
     borderRadius: 8,
     marginRight: 5,
@@ -12,6 +11,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     paddingHorizontal: 10,
+  },
+  tagBorder: {
+    borderColor: '#ECEEEF',
+  },
+  selectedTagBorder: {
+    borderColor: '#F40000',
   },
   tagImage: {
     height: 24,

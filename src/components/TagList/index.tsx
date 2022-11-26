@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {View, FlatList, TouchableOpacity} from 'react-native';
 import {TagModel} from '../../api/models/tag-model';
 import {Tag} from '../Tag';
 
@@ -10,6 +10,15 @@ interface TagListProps {
 
 export function TagList(props: TagListProps) {
   const {tagList, selectTag} = props;
+  const [selectedTag, setSelectedTag] = useState<TagModel | null>(null);
+
+  const onSelectTag = useCallback(
+    (tagItem: TagModel) => {
+      selectTag(tagItem);
+      setSelectedTag(tagItem);
+    },
+    [selectTag],
+  );
 
   return (
     <View>
@@ -18,8 +27,8 @@ export function TagList(props: TagListProps) {
         showsHorizontalScrollIndicator={false}
         data={tagList}
         renderItem={({item}) => (
-          <TouchableOpacity onPress={() => selectTag(item)}>
-            <Tag tag={item} />
+          <TouchableOpacity onPress={() => onSelectTag(item)}>
+            <Tag tag={item} selectedTag={selectedTag} />
           </TouchableOpacity>
         )}
       />
