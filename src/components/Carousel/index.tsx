@@ -1,85 +1,143 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
-  Animated,
-  Dimensions,
-  Platform,
-  Text,
   View,
-  ViewToken,
+  Dimensions,
+  Text,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  LayoutAnimation,
 } from 'react-native';
-import {Styles} from './style';
+import Animated, {
+  interpolate,
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedScrollHandler,
+  runOnJS,
+} from 'react-native-reanimated';
 import {PromotionModel} from '../../api/models/promotion-model';
-import {useNavigation} from '@react-navigation/native';
 import {CarouselCard} from '../CarouselCard';
+import {Styles} from './style';
+
+const SIZE = Dimensions.get('window').width;
+const CAROUSEL_ITEM_SIZE = SIZE * 0.8;
+const SPACING = (SIZE - CAROUSEL_ITEM_SIZE) / 2;
 
 interface Props {
-  imageList: PromotionModel[];
+  promotion: PromotionModel[];
 }
 
-const {width} = Dimensions.get('window');
-const ITEM_SIZE = Platform.OS === 'ios' ? width * 0.82 : width * 0.74;
-const EMPTY_ITEM_SIZE = (width - ITEM_SIZE) / 3;
-
 export function Carousel(props: Props) {
-  const {imageList} = props;
-  const navigation = useNavigation();
-  const scrollX = React.useRef(new Animated.Value(1)).current;
-  const [activeIndex, setActiveIndex] = useState(0);
+  const {promotion} = props;
+  const newData = [{key: 'left-spacer'}, ...promotion, {key: 'right-spacer'}];
+  const [index, setIndex] = useState(0);
+  const sharedValue = useSharedValue(0);
 
-  const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 50,
-    waitForInteraction: true,
-    minimumViewTime: 1,
-  });
+  const applyAnimation = useCallback(() => {
+    const CustomAnimation = {
+      duration: 200,
+      create: {
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.scaleX,
+        springDamping: 0.7,
+      },
+      update: {
+        type: LayoutAnimation.Types.linear,
+        springDamping: 0.7,
+      },
+    };
+    LayoutAnimation.configureNext(CustomAnimation);
+  }, []);
 
-  const onViewableItemsChanged = React.useRef(({changed}) => {
-    if (changed && changed.length > 0) {
-      setActiveIndex(changed[0].index);
-    }
-  });
-
-  const navigateToDetailScreen = useCallback(
-    (promotionId: number) => {
-      // @ts-ignore
-      navigation.navigate('DetailScreen', {promotionId});
+  const setSharedValue = useCallback(
+    (event: NativeScrollEvent) => {
+      sharedValue.value = event.contentOffset.x;
     },
-    [navigation],
+    [sharedValue],
   );
 
+  let setPageIndex: (page: number) => void;
+  setPageIndex = useCallback((page: number) => {
+    setIndex(page);
+    applyAnimation();
+  }, []);
+
+  const onScroll = useAnimatedScrollHandler(event => {
+    runOnJS(setSharedValue)(event);
+    runOnJS(setPageIndex)(
+      Math.round(event.contentOffset.x / CAROUSEL_ITEM_SIZE),
+    );
+  });
+
   return (
-    <View style={Styles.container}>
-      <Animated.FlatList
-        showsHorizontalScrollIndicator={false}
-        data={imageList}
-        horizontal
-        bounces={false}
-        decelerationRate={Platform.OS === 'ios' ? 0 : 0.98}
-        snapToInterval={ITEM_SIZE}
-        onViewableItemsChanged={onViewableItemsChanged?.current}
-        viewabilityConfig={viewabilityConfig?.current}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {x: scrollX}}}],
-          {useNativeDriver: false},
-        )}
-        scrollEventThrottle={16}
-        renderItem={({item, index}) => {
-          return (
-            <>
-              {index === 0 ? <View style={{width: EMPTY_ITEM_SIZE}} /> : null}
-              <CarouselCard
-                item={item}
-                onPress={navigateToDetailScreen}
-                ITEM_SIZE={ITEM_SIZE}
-                index={index}
-                activeIndex={activeIndex}
-              />
-              {index === imageList.length - 1 ? (
-                <View style={{width: EMPTY_ITEM_SIZE}} />
-              ) : null}
-            </>
-          );
-        }}
-      />
+    <>
+      <Animated.View>
+        <View>
+          <Animated.ScrollView
+            onScroll={onScroll}
+            scrollEventThrottle={16}
+            decelerationRate="fast"
+            snapToInterval={CAROUSEL_ITEM_SIZE}
+            horizontal={true}
+            bounces={false}
+            showsHorizontalScrollIndicator={false}>
+            {newData.map((item, index) => {
+              if (!item?.Id) {
+                return <View style={{width: SPACING}} key={index} />;
+              }
+              return (
+                <CarouselItem
+                  item={item}
+                  index={index}
+                  sharedValue={sharedValue}
+                />
+              );
+            })}
+          </Animated.ScrollView>
+        </View>
+      </Animated.View>
+      <View style={Styles.sliderContainer}>
+        {promotion.map((item, i) => (
+          <View
+            style={[
+              Styles.sliderDot,
+              i === index ? Styles.sliderDotActive : Styles.sliderDotPassive,
+            ]}
+          />
+        ))}
+      </View>
+    </>
+  );
+}
+
+interface CarouselItemProps {
+  item: PromotionModel;
+  index: number;
+  sharedValue: Animated.SharedValue<number>;
+}
+
+function CarouselItem(props: CarouselItemProps) {
+  const {item, index, sharedValue} = props;
+
+  const style = useAnimatedStyle(() => {
+    const scale = interpolate(
+      sharedValue.value,
+      [
+        (index - 2) * CAROUSEL_ITEM_SIZE,
+        (index - 1) * CAROUSEL_ITEM_SIZE,
+        index * CAROUSEL_ITEM_SIZE,
+      ],
+      [0.88, 1, 0.88],
+    );
+    return {
+      transform: [{scale}],
+    };
+  });
+
+  return (
+    <View style={{width: CAROUSEL_ITEM_SIZE}} key={index}>
+      <Animated.View style={[style]}>
+        <CarouselCard item={item} />
+      </Animated.View>
     </View>
   );
 }

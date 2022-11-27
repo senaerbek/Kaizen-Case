@@ -6,6 +6,7 @@ import {ExtrazoneService} from '../../api/services/extrazone-service';
 import {Carousel} from '../../components/Carousel';
 import {TagList} from '../../components/TagList';
 import {Header} from '../../components/Header';
+import {Styles} from './style';
 
 export function MainScreen() {
   const [tagList, setTagList] = useState<TagModel[]>([]);
@@ -32,12 +33,14 @@ export function MainScreen() {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
+    <View style={Styles.container}>
       <Header />
-      <View style={{marginLeft: 15, marginTop: 20}}>
+      <View style={Styles.tagListContainer}>
         <TagList tagList={tagList} selectTag={selectTag} />
       </View>
-      <Carousel imageList={promotion} />
+      <View style={Styles.body}>
+        <Carousel promotion={promotion} />
+      </View>
     </View>
   );
 }
