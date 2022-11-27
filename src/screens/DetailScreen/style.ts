@@ -37,6 +37,7 @@ export const Styles = StyleSheet.create({
     fontWeight: '700',
     marginHorizontal: 15,
     marginVertical: 15,
+    color: '#1D1E1C',
   },
   brandIconContainer: {
     position: 'absolute',

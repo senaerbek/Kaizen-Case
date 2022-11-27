@@ -21,7 +21,7 @@ function MyTabBar({state}: {state: TabNavigationState<ParamListBase>}) {
     <View style={Styles.tabBarContainer}>
       {state.routes.map(route => {
         return (
-          <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
+          <TouchableOpacity style={Styles.tabBar}>
             {route.name === 'Main' ? (
               <Image
                 source={require('./images/PORTAL.png')}

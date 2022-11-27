@@ -2,11 +2,8 @@ import React, {useCallback, useState} from 'react';
 import {
   View,
   Dimensions,
-  Text,
-  NativeSyntheticEvent,
   NativeScrollEvent,
   LayoutAnimation,
-  TouchableOpacity,
 } from 'react-native';
 import Animated, {
   interpolate,
@@ -59,10 +56,13 @@ export function Carousel(props: Props) {
   );
 
   let setPageIndex: (page: number) => void;
-  setPageIndex = useCallback((page: number) => {
-    setIndex(page);
-    applyAnimation();
-  }, []);
+  setPageIndex = useCallback(
+    (page: number) => {
+      setIndex(page);
+      applyAnimation();
+    },
+    [applyAnimation],
+  );
 
   const onScroll = useAnimatedScrollHandler(event => {
     runOnJS(setSharedValue)(event);
@@ -83,14 +83,14 @@ export function Carousel(props: Props) {
             horizontal={true}
             bounces={false}
             showsHorizontalScrollIndicator={false}>
-            {newData.map((item, index) => {
+            {newData.map((item: any, promotionIndex: number) => {
               if (!item?.Id) {
-                return <View style={{width: SPACING}} key={index} />;
+                return <View style={{width: SPACING}} key={promotionIndex} />;
               }
               return (
                 <CarouselItem
-                  item={item}
-                  index={index}
+                  promotion={item}
+                  index={promotionIndex}
                   sharedValue={sharedValue}
                 />
               );
@@ -113,13 +113,13 @@ export function Carousel(props: Props) {
 }
 
 interface CarouselItemProps {
-  item: PromotionModel;
+  promotion: PromotionModel;
   index: number;
   sharedValue: Animated.SharedValue<number>;
 }
 
 function CarouselItem(props: CarouselItemProps) {
-  const {item, index, sharedValue} = props;
+  const {promotion, index, sharedValue} = props;
   const navigation = useNavigation();
 
   const style = useAnimatedStyle(() => {
@@ -138,14 +138,15 @@ function CarouselItem(props: CarouselItemProps) {
   });
 
   const navigateToDetailScreen = useCallback(() => {
-    navigation.navigate('DetailScreen', {promotionId: item.Id});
-  }, [item.Id, navigation]);
+    // @ts-ignore
+    navigation.navigate('DetailScreen', {promotionId: promotion.Id});
+  }, [navigation, promotion]);
 
   return (
     <View style={{width: CAROUSEL_ITEM_SIZE}} key={index}>
       <Animated.View style={[style]}>
         <TouchableComponent onPress={navigateToDetailScreen}>
-          <CarouselCard item={item} />
+          <CarouselCard item={promotion} />
         </TouchableComponent>
       </Animated.View>
     </View>

@@ -20,6 +20,10 @@ export const Styles = StyleSheet.create({
     shadowRadius: 11.95,
     elevation: 18,
   },
+  tabBar: {
+    flex: 1,
+    alignItems: 'center',
+  },
   tabBarIcon: {
     width: 20,
     height: 20,
