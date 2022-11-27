@@ -19,10 +19,10 @@ export const Styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 250,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
-    borderBottomStartRadius: 100,
-    borderBottomEndRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 120,
   },
   imageBottom: {
     position: 'absolute',
@@ -36,6 +36,9 @@ export const Styles = StyleSheet.create({
     width: IMAGE_SIZE - 4,
     transform: [{rotate: '2deg'}],
     zIndex: 0,
+  },
+  htmlContentStyle: {
+    marginHorizontal: 15,
   },
   remainingTextContainer: {
     position: 'absolute',

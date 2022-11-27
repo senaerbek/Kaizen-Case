@@ -10,11 +10,10 @@ import {
 import {ExtrazoneService} from '../../api/services/extrazone-service';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {PromotionDetailModel} from '../../api/models/promotion-detail-model';
-import {Style} from './style';
-import {Styles} from '../../components/Carousel/style';
+import {Styles} from './style';
 import RenderHtml from 'react-native-render-html';
 
-const width = Dimensions.get('window').width;
+const SIZE = Dimensions.get('window').width;
 
 type Props = {
   route?: RouteProp<{params: {promotionId: number}}, 'params'>;
@@ -41,21 +40,21 @@ export function DetailScreen(props: Props) {
   }, [promotionId]);
 
   return (
-    <View style={Style.container}>
+    <View style={Styles.container}>
       <ScrollView>
-        <TouchableOpacity style={Style.backButton} onPress={goBackPress}>
+        <TouchableOpacity style={Styles.backButton} onPress={goBackPress}>
           <Image
             source={require('./images/Back.png')}
-            style={Style.backButtonImage}
+            style={Styles.backButtonImage}
           />
         </TouchableOpacity>
 
-        <View style={Style.body}>
+        <View style={Styles.body}>
           <Image
-            style={Style.image}
+            style={Styles.image}
             source={{uri: promotionDetail?.ImageUrl}}
           />
-          <View style={Style.brandIconContainer}>
+          <View style={Styles.brandIconContainer}>
             <Image
               resizeMode={'contain'}
               source={{uri: promotionDetail?.BrandIconUrl}}
@@ -68,9 +67,32 @@ export function DetailScreen(props: Props) {
             </Text>
           </View>
         </View>
-        <Text style={Style.title}>{promotionDetail?.Title}</Text>
+        {promotionDetail?.Title.includes('<') &&
+        promotionDetail?.Title.includes('>') ? (
+          <RenderHtml
+            baseStyle={Styles.htmlContentStyle}
+            tagsStyles={{
+              p: {color: '#000000', textAlign: 'center'},
+              li: {color: '#000000', textAlign: 'center'},
+              h6: {color: '#000000', textAlign: 'center'},
+              h5: {color: '#000000', textAlign: 'center'},
+              h4: {color: '#000000', textAlign: 'center'},
+              h3: {color: '#000000', textAlign: 'center'},
+              h2: {color: '#000000', textAlign: 'center'},
+              h1: {color: '#000000', textAlign: 'center'},
+              span: {color: '#000000', textAlign: 'center'},
+            }}
+            contentWidth={SIZE}
+            source={{
+              html: promotionDetail?.Title ?? '',
+            }}
+          />
+        ) : (
+          <Text style={Styles.title}>{promotionDetail?.Title}</Text>
+        )}
+
         <RenderHtml
-          baseStyle={Style.htmlContentStyle}
+          baseStyle={Styles.htmlContentStyle}
           tagsStyles={{
             p: {color: '#555'},
             li: {color: '#555'},
@@ -82,14 +104,14 @@ export function DetailScreen(props: Props) {
             h1: {color: '#555'},
             span: {color: '#555'},
           }}
-          contentWidth={width}
+          contentWidth={SIZE}
           source={{
-            html: promotionDetail?.Description ?? '<></>',
+            html: promotionDetail?.Description ?? '',
           }}
         />
       </ScrollView>
-      <View style={Style.buttonContainer}>
-        <Text style={Style.buttonText}>Hemen Katıl</Text>
+      <View style={Styles.buttonContainer}>
+        <Text style={Styles.buttonText}>Hemen Katıl</Text>
       </View>
     </View>
   );

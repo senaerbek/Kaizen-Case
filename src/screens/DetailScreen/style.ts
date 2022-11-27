@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const Style = StyleSheet.create({
+export const Styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
@@ -30,7 +30,7 @@ export const Style = StyleSheet.create({
   image: {
     width: '100%',
     height: 300,
-    borderBottomStartRadius: 120,
+    borderBottomLeftRadius: 120,
   },
   title: {
     fontSize: 26,
@@ -65,7 +65,7 @@ export const Style = StyleSheet.create({
   },
   remainingTextContainer: {
     position: 'absolute',
-    bottom: 15,
+    bottom: 5,
     right: 5,
     height: 32,
     backgroundColor: '#1D1E1C',
@@ -79,5 +79,9 @@ export const Style = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: '#FFFFFF',
+  },
+  brandIcon: {
+    width: 54,
+    height: 54,
   },
 });

@@ -26,6 +26,8 @@ export const Styles = StyleSheet.create({
   },
   tabBarLabel: {
     fontSize: 10,
+    color: '#1D1E1C',
+    fontWeight: '700',
   },
   mainScreenIcon: {
     width: 60,

@@ -2,7 +2,6 @@ import {Dimensions, Image, Text, View} from 'react-native';
 import {Styles} from './style';
 import React from 'react';
 import {PromotionModel} from '../../api/models/promotion-model';
-import {Style} from '../../screens/DetailScreen/style';
 import RenderHtml from 'react-native-render-html';
 
 const SIZE = Dimensions.get('window').width;
@@ -39,7 +38,7 @@ export function CarouselCard(props: CarouselCardProps) {
         </View>
         {item.Title.includes('<') && item.Title.includes('>') ? (
           <RenderHtml
-            baseStyle={Style.htmlContentStyle}
+            baseStyle={Styles.htmlContentStyle}
             tagsStyles={{
               p: {color: '#000000', textAlign: 'center'},
               li: {color: '#000000', textAlign: 'center'},
@@ -53,7 +52,7 @@ export function CarouselCard(props: CarouselCardProps) {
             }}
             contentWidth={SIZE}
             source={{
-              html: item?.Title ?? '<></>',
+              html: item?.Title ?? '',
             }}
           />
         ) : (

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
 import {TagModel} from '../../api/models/tag-model';
-import {styles} from './style';
+import {Styles} from './style';
 
 interface TagProps {
   tag: TagModel;
@@ -14,18 +14,18 @@ export function Tag(props: TagProps) {
   return (
     <View
       style={[
-        styles.tagContainer,
+        Styles.tagContainer,
         selectedTag?.Id === tag.Id
-          ? styles.selectedTagBorder
-          : styles.tagBorder,
+          ? Styles.selectedTagBorder
+          : Styles.tagBorder,
       ]}>
       <Image
-        style={styles.tagImage}
+        style={Styles.tagImage}
         source={{
           uri: tag.IconUrl,
         }}
       />
-      <Text>{tag.Name}</Text>
+      <Text style={Styles.tagText}>{tag.Name}</Text>
     </View>
   );
 }

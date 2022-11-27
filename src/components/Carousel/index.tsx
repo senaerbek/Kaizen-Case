@@ -6,6 +6,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   LayoutAnimation,
+  TouchableOpacity,
 } from 'react-native';
 import Animated, {
   interpolate,
@@ -17,6 +18,8 @@ import Animated, {
 import {PromotionModel} from '../../api/models/promotion-model';
 import {CarouselCard} from '../CarouselCard';
 import {Styles} from './style';
+import {TouchableComponent} from '../TouchableComponent';
+import {useNavigation} from '@react-navigation/native';
 
 const SIZE = Dimensions.get('window').width;
 const CAROUSEL_ITEM_SIZE = SIZE * 0.8;
@@ -117,6 +120,7 @@ interface CarouselItemProps {
 
 function CarouselItem(props: CarouselItemProps) {
   const {item, index, sharedValue} = props;
+  const navigation = useNavigation();
 
   const style = useAnimatedStyle(() => {
     const scale = interpolate(
@@ -133,10 +137,16 @@ function CarouselItem(props: CarouselItemProps) {
     };
   });
 
+  const navigateToDetailScreen = useCallback(() => {
+    navigation.navigate('DetailScreen', {promotionId: item.Id});
+  }, [item.Id, navigation]);
+
   return (
     <View style={{width: CAROUSEL_ITEM_SIZE}} key={index}>
       <Animated.View style={[style]}>
-        <CarouselCard item={item} />
+        <TouchableComponent onPress={navigateToDetailScreen}>
+          <CarouselCard item={item} />
+        </TouchableComponent>
       </Animated.View>
     </View>
   );

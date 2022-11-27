@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const styles = StyleSheet.create({
+export const Styles = StyleSheet.create({
   tagContainer: {
     height: 36,
     minWidth: 105,
@@ -8,7 +8,6 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 5,
     alignItems: 'center',
-    justifyContent: 'center',
     flexDirection: 'row',
     paddingHorizontal: 10,
   },
@@ -23,5 +22,10 @@ export const styles = StyleSheet.create({
     width: 24,
     marginRight: 8,
     borderRadius: 7.2,
+  },
+  tagText: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#1D1E1C',
   },
 });
