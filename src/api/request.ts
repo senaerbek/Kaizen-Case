@@ -13,8 +13,6 @@ api.interceptors.request.use(
 
     config.headers['X-Country-Id'] = 'TR';
     config.headers['X-Language-Id'] = 'TR';
-    axios.defaults.headers['X-Country-Id'] = 'TR';
-    axios.defaults.headers['X-Language-Id'] = 'TR';
 
     return config;
   },
